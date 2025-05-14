@@ -125,6 +125,7 @@ impl CommandUtf8Ext for std::process::Command {
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn test_strstr() {
         assert!(strstr_ignore_case(OsStr::new("UTF-8"), b"utf-8"));
