@@ -96,7 +96,7 @@ fn utf8_supported_unix() -> Utf8Support {
 
 #[cfg(windows)]
 fn utf8_supported_windows() -> Utf8Support {
-    use windows_sys::Win32::Console::*;
+    use windows_sys::Win32::System::Console::*;
     match unsafe { GetConsoleOutputCP() } {
         65001 => Utf8Support::UTF8,
         20127 => Utf8Support::ASCII,
