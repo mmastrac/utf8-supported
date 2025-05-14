@@ -1,9 +1,11 @@
 #![doc = include_str!("../README.md")]
 
+#[cfg(unix)]
 use std::ffi::OsStr;
 
-pub const LOCALE_ENVIRONMENT_VARIABLES: &[&str] = &["LC_ALL", "LC_CTYPE", "LANG"];
+const LOCALE_ENVIRONMENT_VARIABLES: &[&str] = &["LC_ALL", "LC_CTYPE", "LANG"];
 
+#[cfg(unix)]
 enum LocaleSignal {
     Unknown,
     UTF8,
@@ -102,24 +104,85 @@ fn utf8_supported_windows() -> Utf8Support {
         65001 => Utf8Support::UTF8,
         20127 => Utf8Support::ASCII,
         1252 => Utf8Support::Latin1,
-        437 => Utf8Support::Latin1,
         0 => Utf8Support::Unknown,
+        // Should we expose this?
+        437 => Utf8Support::Other,
         _ => Utf8Support::Other,
     }
 }
 
-/// A trait for setting the locale to C.
+/// A trait for setting the locale of a subprocess to C.
 pub trait CommandUtf8Ext {
-    /// Ensure that a child subprocess runs with the C locale.
+    /// Ensure that a child subprocess runs with the C locale (Unix only).
+    #[cfg(unix)]
     fn set_c_locale(&mut self);
 }
 
 impl CommandUtf8Ext for std::process::Command {
+    #[cfg(unix)]
     fn set_c_locale(&mut self) {
-        self.env("LC_ALL", "C");
         self.env("LANG", "C");
+        self.env("LC_ALL", "C");
         self.env("LC_CTYPE", "C");
     }
+}
+
+#[derive(Debug, Default)]
+#[cfg(windows)]
+pub struct CodePageHandle(u32, u32);
+
+#[cfg(windows)]
+impl Drop for CodePageHandle {
+    fn drop(&mut self) {
+        use windows_sys::Win32::System::Console::*;
+        unsafe {
+            if self.0 != 0 {
+                SetConsoleOutputCP(self.0);
+            }
+            if self.1 != 0 {
+                SetConsoleCP(self.1);
+            }
+        }
+    }
+}
+
+/// Set the console code page to UTF-8 (Windows only).
+///
+/// This function returns a handle that will reset the console code page to the
+/// original value when dropped.
+///
+/// # Example
+///
+/// ```rust
+/// let handle = set_console_utf8().unwrap_or_default();
+/// // Use UTF-8 here...
+/// drop(handle);
+/// // ...and restore the original code page when done.
+/// ```
+#[must_use = "The returned CodePageHandle resets the console code page to the original value when dropped"]
+#[cfg(windows)]
+pub fn set_console_utf8() -> Result<CodePageHandle, std::io::Error> {
+    use windows_sys::Win32::Globalization::*;
+    use windows_sys::Win32::System::Console::*;
+
+    unsafe {
+        let original_output_cp = GetConsoleOutputCP();
+        let original_input_cp = GetConsoleCP();
+
+        if IsValidCodePage(65001) {
+            SetConsoleOutputCP(65001);
+            SetConsoleCP(65001);
+        } else {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "UTF-8 codepage (65001) is not available",
+            ));
+        }
+
+        Ok(CodePageHandle(original_output_cp, original_input_cp))
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]

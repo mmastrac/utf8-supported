@@ -29,10 +29,17 @@ jobs:
 
       - name: Test
         run: |
+          echo "Current locale:"
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to C:"
+          LC_ALL=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to en_US:"
+          LC_ALL=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to C.UTF-8:"
+          LC_ALL=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
 
   build-macos:
     runs-on: macos-latest
@@ -52,10 +59,17 @@ jobs:
 
       - name: Test
         run: |
+          echo "Current locale:"
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
-          LANG=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to C:"
+          LC_ALL=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to en_US:"
+          LC_ALL=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting locale to C.UTF-8:"
+          LC_ALL=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
 
   build-windows:
     runs-on: windows-latest

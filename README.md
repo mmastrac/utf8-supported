@@ -21,12 +21,15 @@ match utf8_supported::utf8_supported() {
 This library can also be used to ensure that a child process runs with the C locale:
 
 ```rust
-use std::process::Command;
-use utf8_supported::CommandUtf8Ext;
+#[cfg(unix)] 
+{
+    use std::process::Command;
+    use utf8_supported::CommandUtf8Ext;
 
-let mut cmd = Command::new("ls");
-if utf8_supported::utf8_supported() != utf8_supported::Utf8Support::UTF8 {
-    cmd.set_c_locale();
+    let mut cmd = Command::new("ls");
+    if utf8_supported::utf8_supported() != utf8_supported::Utf8Support::UTF8 {
+        cmd.set_c_locale();
+    }
+    cmd.output().unwrap();
 }
-cmd.output().unwrap();
 ```
