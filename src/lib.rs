@@ -40,6 +40,7 @@ fn strstr_ignore_case(haystack: &OsStr, needle: &[u8]) -> bool {
     false
 }
 
+#[cfg(unix)]
 fn get_locale_signal(value: &OsStr) -> LocaleSignal {
     if value.is_empty() {
         LocaleSignal::Unknown
