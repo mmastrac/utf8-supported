@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors = ["Matthew Mastracci <matthew@mastracci.com>"]
 description = "Determine the UTF-8 support of the current locale."
-license = "MIT or Apache-2.0"
+license = "MIT/Apache-2.0"
 repository = "https://github.com/mmastrac/utf8-supported"
 
 [dependencies]
