@@ -75,10 +75,18 @@ jobs:
 
       - name: Test
         run: |
+          echo "Current code page:"
+          chcp
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting code page to 65001 (UTF-8):"
           chcp 65001
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting code page to 1252 (Latin-1):"
           chcp 1252
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+          echo "Setting code page to 437 (DOS US):"
           chcp 437
           cargo run --example run_subprocess -- target/debug/examples/is_utf8
