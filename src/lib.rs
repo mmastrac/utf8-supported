@@ -169,7 +169,8 @@ pub fn set_console_utf8() -> Result<CodePageHandle, std::io::Error> {
         let original_output_cp = GetConsoleOutputCP();
         let original_input_cp = GetConsoleCP();
 
-        if IsValidCodePage(65001) {
+        // Returns a nonzero value if the code page is valid, or 0 if the code page is invalid
+        if IsValidCodePage(65001) != 0 {
             SetConsoleOutputCP(65001);
             SetConsoleCP(65001);
         } else {
@@ -181,8 +182,6 @@ pub fn set_console_utf8() -> Result<CodePageHandle, std::io::Error> {
 
         Ok(CodePageHandle(original_output_cp, original_input_cp))
     }
-
-    Ok(())
 }
 
 #[cfg(test)]
