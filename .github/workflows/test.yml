@@ -16,9 +16,7 @@ jobs:
 
     steps:
       - name: Rust toolchain
-        uses: actions/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build
         run: cargo build
@@ -38,9 +36,7 @@ jobs:
 
     steps:
       - name: Rust toolchain
-        uses: actions/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build
         run: cargo build
@@ -60,9 +56,7 @@ jobs:
 
     steps:
       - name: Rust toolchain
-        uses: actions/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Build
         run: cargo build
