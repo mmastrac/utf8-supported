@@ -1,0 +1,13 @@
+[package]
+name = "utf8-supported"
+version = "0.1.0"
+edition = "2024"
+authors = ["Matthew Mastracci <matthew@mastracci.com>"]
+description = "Determine the UTF-8 support of the current locale."
+license = "MIT"
+repository = "https://github.com/mmastrac/utf8-supported"
+
+[dependencies]
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59.0", features = ["Win32_Globalization"] }

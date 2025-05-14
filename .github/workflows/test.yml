@@ -1,0 +1,81 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Rust toolchain
+        uses: actions/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build
+        run: cargo build
+
+      - name: Test
+        run: cargo run --example is_utf8
+
+      - name: Test
+        run: |
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Rust toolchain
+        uses: actions/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build
+        run: cargo build
+
+      - name: Test
+        run: cargo run --example is_utf8
+
+      - name: Test
+        run: |
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=C cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=en_US cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          LANG=C.UTF-8 cargo run --example run_subprocess -- target/debug/examples/is_utf8
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Rust toolchain
+        uses: actions/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build
+        run: cargo build
+
+      - name: Test
+        run: cargo run --example is_utf8
+
+      - name: Test
+        run: |
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          chcp 65001
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          chcp 1252
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
+          chcp 437
+          cargo run --example run_subprocess -- target/debug/examples/is_utf8
