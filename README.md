@@ -1,5 +1,8 @@
 # utf8-supported
 
+[![Crates.io](https://img.shields.io/crates/v/utf8-supported.svg)](https://crates.io/crates/utf8-supported)
+[![Documentation](https://docs.rs/utf8-supported/badge.svg)](https://docs.rs/utf8-supported)
+
 A Rust library for determining the UTF-8 support of the current terminal locale.
 
 Example:
